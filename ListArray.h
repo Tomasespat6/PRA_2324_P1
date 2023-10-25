@@ -12,9 +12,9 @@ class ListArray : public List<T> {
 	static const int MINSIZE = 2;
 
 
-  void resize(int new_size) override{
+  void resize(int new_size){
   
-    T *arr2 [new_size];
+    T arr2 [new_size];
     for(int i = 0; i < new_size; i++)
       arr2[i] = arr[i];
 	  
@@ -34,10 +34,46 @@ class ListArray : public List<T> {
   
 public:
   
+ListArray(){
+    arr = new int [MINSIZE];
+   max = 2;
+    n = 0;
+   
+
+  }
+
+  ~ ListArray(){
+
+    delete[] arr;
+
+  }
+
+  T operator [](int pos ) {
+
+
+          if (pos < 0 || pos > n)
+            throw std::out_of_range("No se puede introducir en esta posicion");
+
+          else
+            return arr[pos];
+  }
+
+  friend std::ostream& operator<<(std::ostream &out, const ListArray<T> &list){
+    out<<"List -> [ ";
+    for(int i = 0; i < list.n ; i++){
+      out<< list.arr[i]<<" ";
+
+    }
+    out<<"]";
+    return out;
+  }
   
   virtual void insert(int pos, T e) override {
     int i;
     
+	if(pos < 0 || pos > n)
+      throw std::out_of_range("No se puede introducir en esta posicion");
+
     if (size() == max)
       resize(size()*2);
     
@@ -48,15 +84,13 @@ public:
       append(e);
     
     else
-      for(i = n; i > pos; i--)	
+      for(i = n; i > pos; i--){	
 	arr[i]= arr[i-1];
-    
+      }
     
     arr[pos]= e;
     n++;
     
-    if(pos < 0 || pos > n)
-      throw std::out_of_range("No se puede introducir en esta posicion");
   }
   
   virtual void append( T e) override {
@@ -74,27 +108,32 @@ public:
     if(size() == max)
       resize(size()*2);
     
-    for(i = n; i > 0; i--){
+    else{
+    for(i = n; i > 0; i--)
       arr[i]= arr[i-1];
-    }
+    
     
     arr[0]= e;
     n++;
-    
-    
+   
+    } 
   }
   
   
   virtual T remove(int pos) override{
-    T c = arr[pos];
+
+	  T c = arr[pos];
+
+	if(pos < 0 || pos > size()-1)
+      	throw std::out_of_range("No se puede introducir en esta posicion");
+
+	else{
     for(int i = pos; i < size(); i++)
       arr[i]= arr[i+1];
     
     n--;
     return c;
-    
-    if(pos < 0 || pos > size()-1)
-      throw std::out_of_range("No se puede introducir en esta posicion");
+	}
     
   }
   virtual T get (int pos) override {
@@ -103,7 +142,7 @@ public:
     
     if(pos < 0 || pos > size()-1)
       throw std::out_of_range("No se puede introducir en esta posicion");
-    
+    else
     return c;
   }
   
@@ -129,37 +168,5 @@ public:
     return n;
   }
   
-  ListArray(){
-    arr = new int [MINSIZE];
-    n = 0;
-    max = 2;
-	  
-  }
-  
-  ~ ListArray(){
-    
-    delete[] arr;
-    
-  }
-  
-  T operator [](int pos ) {
-    
-	  
-	  if (pos < 0 || pos > n)
-	    throw std::out_of_range("No se puede introducir en esta posicion");
-	  
-	  else
-	    return arr[pos];
-  }
-  
-  friend std::ostream& operator<<(std::ostream &out, const ListArray<T> &list){
-    out<<"List -> [ ";
-    for(int i = 0; i < list.n ; i++){
-      out<< list.arr[i]<<" ";
-      
-    }
-    out<<"]";
-    return out;
-  }
 
 };
