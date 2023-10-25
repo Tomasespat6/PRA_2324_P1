@@ -9,15 +9,36 @@ class ListArray : public List<T> {
 	T *arr;
 	int max;
 	int n;
-	static constint INT MINSIZE = 2;
-
-	public:
+	static const int MINSIZE = 2;
 
 
+  void resize(int new_size) override{
+  
+    T *arr2 [new_size];
+    for(int i = 0; i < new_size; i++)
+      arr2[i] = arr[i];
+	  
+    delete arr;
+    
+    arr = new int[new_size];
+    for(int i = 0; i < new_size; i++)
+      arr[i] = arr2[i];
+
+	
+	max = new_size;
+
+	  
+    
+  }
+  
+  
+public:
+  
+  
   virtual void insert(int pos, T e) override {
     int i;
-
-    if (size() == MAX)
+    
+    if (size() == max)
       resize(size()*2);
     
     if (pos == 0)
@@ -29,51 +50,51 @@ class ListArray : public List<T> {
     else
       for(i = n; i > pos; i--)	
 	arr[i]= arr[i-1];
-     
+    
     
     arr[pos]= e;
     n++;
     
     if(pos < 0 || pos > n)
-      throw out_of_range("No se puede introducir en esta posicion");
+      throw std::out_of_range("No se puede introducir en esta posicion");
   }
   
   virtual void append( T e) override {
-
-    if(size() == MAX)
+    
+    if(size() == max)
       resize(size()*2);
     
     arr[n] = e;
     n++;
-	}
+  }
   
   virtual void prepend(T e) override {
     int i;
-
-    if(size() == MAX)
+    
+    if(size() == max)
       resize(size()*2);
     
     for(i = n; i > 0; i--){
-	    arr[i]= arr[i-1];
+      arr[i]= arr[i-1];
     }
-    arr[pos]= e;
+    
+    arr[0]= e;
     n++;
     
-    if(pos < 0 || pos > size()-1)
-      throw out_of_range("No se puede introducir en esta posicion");
+    
   }
   
-	
+  
   virtual T remove(int pos) override{
     T c = arr[pos];
-    for(i = pos; i < size(); i++)
+    for(int i = pos; i < size(); i++)
       arr[i]= arr[i+1];
     
     n--;
     return c;
     
     if(pos < 0 || pos > size()-1)
-      throw out_of_range("No se puede introducir en esta posicion");
+      throw std::out_of_range("No se puede introducir en esta posicion");
     
   }
   virtual T get (int pos) override {
@@ -81,7 +102,7 @@ class ListArray : public List<T> {
     T c = arr[pos];
     
     if(pos < 0 || pos > size()-1)
-      throw out_of_range("No se puede introducir en esta posicion");
+      throw std::out_of_range("No se puede introducir en esta posicion");
     
     return c;
   }
@@ -89,79 +110,56 @@ class ListArray : public List<T> {
 		
   
   virtual int search(T e) override {
-    for(i = 0; i < n; i++) {
+    for(int i = 0; i < n; i++) {
       if(arr[i]== e) 
 	return i;
     }
-    else
+    
       return -1;
     
   }
   
-	virtual bool empty() override {
-	  if(n == 0)
-	    return true;
-	  else
-	    return false;
-	}
+  virtual bool empty() override {
+    if(n == 0)
+      return true;
+    else
+      return false;
+  }
   virtual int size() override{ 
-	  return n;
+    return n;
   }
   
-  
-  
-};
-
-#endif
-
   ListArray(){
-	  arr = new int [MINSIZE];
-	  n = 0;
-	  MINSIZE = 2;
-	  MAX = 2;
+    arr = new int [MINSIZE];
+    n = 0;
+    max = 2;
 	  
-	}
-
-~ ListArray(){
-	  
-	  delete arr;
-	
-	}
-
-T operator [](int pos ) {
-	  
-	  m = search(T e);
-	if (m == -1)
-	  throw out_of_range("No se puede introducir en esta posicion");
-	
-	else
-	  return m;
-	}
-
-friend std::ostream& operator<<(std::ostream &out, const ListArray<T> &list){
-   out<<"List -> [ ";
-   for(int i = 0; i < list.n ; i++){
-     out<< list.arr[i]<<" ";
-     
-   }
-   out<<"]";
-   return out;
- }
-
-void resize(int new_size) override{
+  }
   
- 	T arr2 [new_size];
-	for(int i = 0; i < new_size; i++)
-         arr2[i] = arr[i];
+  ~ ListArray(){
+    
+    delete[] arr;
+    
+  }
+  
+  T operator [](int pos ) {
+    
 	  
-	  delete arr;
-
-	  arr = new int[new_size];
-	  for(int i = 0; i < new_size; i++)
-	    arr[i] = arr2[i]
-	      max = new_size;
-
+	  if (pos < 0 || pos > n)
+	    throw std::out_of_range("No se puede introducir en esta posicion");
 	  
-     
-	}
+	  else
+	    return arr[pos];
+  }
+  
+  friend std::ostream& operator<<(std::ostream &out, const ListArray<T> &list){
+    out<<"List -> [ ";
+    for(int i = 0; i < list.n ; i++){
+      out<< list.arr[i]<<" ";
+      
+    }
+    out<<"]";
+    return out;
+  }
+
 };
